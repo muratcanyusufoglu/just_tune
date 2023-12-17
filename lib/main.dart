@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:drum_machine/feature/models/audio_list/audio_list_model.dart';
 import 'package:drum_machine/product/screen/add_drim/provider/add_trim_provider.dart';
 import 'package:drum_machine/product/screen/home/view/home_screen.dart';
 import 'package:flutter/material.dart';

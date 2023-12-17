@@ -19,7 +19,8 @@ class CustomAudioListComponent extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         await player.stop();
-        await player.setAsset(trackName);
+        final String track = 'assets/$trackName';
+        await player.setAsset(track);
         await player.play();
       },
       child: Column(

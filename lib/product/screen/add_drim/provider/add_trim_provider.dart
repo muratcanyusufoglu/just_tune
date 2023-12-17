@@ -10,8 +10,14 @@ class AddTrimProvider extends ChangeNotifier {
   final String _audioIndex = '';
   String get audioIndex => _audioIndex;
 
+  String _youtubeMelody = '';
+  String get youtubeMelody => _youtubeMelody;
+
   bool _isFetch = true;
   bool get isFetch => _isFetch;
+
+  bool _isFetchYoutubeList = true;
+  bool get isFetchYoutubeList => _isFetchYoutubeList;
 
   bool _isSelected = true;
   bool get isSelected => _isSelected;
@@ -22,7 +28,15 @@ class AddTrimProvider extends ChangeNotifier {
   final List<String> _audiolistName = [];
   List<String> get audioListName => _audiolistName;
 
+  final List<String> _youtubeList = [];
+  List<String> get youtubeList => _youtubeList;
+
   var box = Hive.box('audioBox');
+
+  void setYoutubeMelody(String sound){
+    _youtubeMelody = sound;
+    notifyListeners();
+  }
 
   void addAndStoreTask(Audio audio) async {
     if (_audiolistName.contains(audio.trackTitle)) {
@@ -35,6 +49,17 @@ class AddTrimProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addAndStoreYoutubeMusics(String audio) async {
+    if (_youtubeList.contains(audio)) {
+      _youtubeList.remove(audio);
+    } else {
+      _youtubeList.add(audio);
+    }
+    await box.put('youtubeList', _youtubeList); // adding list of maps to storage
+    _isFetchYoutubeList = false;
+    notifyListeners();
+  }
+
   void restoreAudios() {
     List aa = box.get('audios') ?? []; // initializing list from storage
     for (int i = 0; i < aa.length; i++) {
@@ -42,6 +67,18 @@ class AddTrimProvider extends ChangeNotifier {
     }
     _isFetch = false;
   }
+
+
+  void getYoutubelist() {
+    List aa = box.get('youtubeList') ?? []; // initializing list from storage
+    for (int i = 0; i < aa.length; i++) {
+      _youtubeList.add(aa[i]);
+    }
+    print('youtubelist'+_youtubeList.toString());
+    _isFetchYoutubeList = false;
+  }
+
+
 
   bool isSoundSelected(Audio audio) {
     if (_audiolistName.contains(audio.trackTitle)) {
