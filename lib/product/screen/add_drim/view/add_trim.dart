@@ -12,23 +12,33 @@ class AddTrim extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(),
       body: Column(
         children: [
           ElevatedButton(onPressed: (){
             showModalBottomSheet(context: context, builder: (BuildContext context) {
               return SizedBox(
-                height: 200,
+                height: 300,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Text('Modal BottomSheet'),
-                      TextField(onChanged: (value) => context.read<AddTrimProvider>().setYoutubeMelody(value)),
+                      const Text('Add Youtube Link'),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(decoration: const InputDecoration(
+        disabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        hintText: 'Youtube Link',
+      ),maxLines: 1, onChanged: (value) => context.read<AddTrimProvider>().setYoutubeMelody(value)),
+                      ),
+                      TextField(onChanged: (value) => context.read<AddTrimProvider>().setYoutubeVideoTitle(value)),
                       ElevatedButton(
                         child: const Text('Save Link'),
-                        onPressed: () => {context.read<AddTrimProvider>().addAndStoreYoutubeMusics(context.read<AddTrimProvider>().youtubeMelody), Navigator.pop(context)},
+                        onPressed: () => {context.read<AddTrimProvider>().addAndStoreYoutubeMusics(context.read<AddTrimProvider>().youtubeMelody, context.read<AddTrimProvider>().youtubeLinkTitle), Navigator.pop(context)},
                       ),
                       ElevatedButton(
                         child: const Text('Close BottomSheet'),

@@ -13,6 +13,9 @@ class AddTrimProvider extends ChangeNotifier {
   String _youtubeMelody = '';
   String get youtubeMelody => _youtubeMelody;
 
+  String _youtubeLinkTitle = '';
+  String get youtubeLinkTitle => _youtubeLinkTitle;
+
   bool _isFetch = true;
   bool get isFetch => _isFetch;
 
@@ -38,6 +41,11 @@ class AddTrimProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setYoutubeVideoTitle(String sound){
+    _youtubeLinkTitle = sound;
+    notifyListeners();
+  }
+
   void addAndStoreTask(Audio audio) async {
     if (_audiolistName.contains(audio.trackTitle)) {
       _audiolistName.remove(audio.trackTitle);
@@ -49,7 +57,7 @@ class AddTrimProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addAndStoreYoutubeMusics(String audio) async {
+  void addAndStoreYoutubeMusics(String audio, String title) async {
     if (_youtubeList.contains(audio)) {
       _youtubeList.remove(audio);
     } else {
@@ -74,7 +82,6 @@ class AddTrimProvider extends ChangeNotifier {
     for (int i = 0; i < aa.length; i++) {
       _youtubeList.add(aa[i]);
     }
-    print('youtubelist'+_youtubeList.toString());
     _isFetchYoutubeList = false;
   }
 

@@ -23,48 +23,52 @@ class CustomAudioListComponent extends StatelessWidget {
         await player.setAsset(track);
         await player.play();
       },
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Icon(Icons.music_note),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(trackName),
-                    Text(
-                      audioExplanation,
-                      style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                    )
-                  ],
+      onLongPress: () {
+      },
+      child: SizedBox(
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(Icons.music_note),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        audioExplanation,
+                        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                        overflow: TextOverflow.fade,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  context.read<AddTrimProvider>().addAndStoreTask(audio);
-                },
-                child: Container(
-                  width: 50,
-                  color: Colors.yellow.shade600,
-                  padding: const EdgeInsets.all(8),
-                  child: context.watch<AddTrimProvider>().isSoundSelected(audio)
-                      ? const Text(
-                          'TURN LIGHT ONN',
-                          style: TextStyle(color: Colors.black),
-                        )
-                      : const Text(
-                          'TURN LIGHT OFF',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                ),
-              )
-            ],
-          ),
-        ],
+                GestureDetector(
+                  onTap: () {
+                    context.read<AddTrimProvider>().addAndStoreTask(audio);
+                  },
+                  child: Container(
+                    width: 50,
+                    color: Colors.yellow.shade600,
+                    padding: const EdgeInsets.all(8),
+                    child: context.watch<AddTrimProvider>().isSoundSelected(audio)
+                        ? const Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        : const Text(
+                            'TURN LIGHT OFF',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
