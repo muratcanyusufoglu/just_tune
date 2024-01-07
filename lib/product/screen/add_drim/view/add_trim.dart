@@ -26,6 +26,10 @@ class AddTrim extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       const Text('Add Youtube Link'),
+                      ElevatedButton(
+                        child: const Text('Open Youtube App'),
+                        onPressed: () => context.read<AddTrimProvider>().openYouTubeApp(),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(decoration: const InputDecoration(

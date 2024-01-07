@@ -77,7 +77,7 @@ void initState(){
                   ),
                   itemCount: context.watch<AddTrimProvider>().youtubeList.length, // Set the number of items in your list
                   itemBuilder: (context, index) {
-                  return CustomAudioYoutubeComponent(youtubeLink: context.read<AddTrimProvider>().youtubeList[index]);
+                  return CustomAudioYoutubeComponent(youtubeLink: context.read<AddTrimProvider>().youtubeList[index], deleteLink: (String youtubeLink) => context.read<AddTrimProvider>().deleteLinkToBox(youtubeLink, context),);
                   },
                   )
                 : const Text('Please add a sound'),

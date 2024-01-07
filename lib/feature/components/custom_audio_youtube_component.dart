@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class CustomAudioYoutubeComponent extends StatefulWidget {
-  const CustomAudioYoutubeComponent({Key? key, required this.youtubeLink}) : super(key: key);
+  const CustomAudioYoutubeComponent({Key? key, required this.youtubeLink, required this.deleteLink}) : super(key: key);
 
   final String youtubeLink;
+  final void Function(String) deleteLink;
 
   @override
   State<CustomAudioYoutubeComponent> createState() => _CustomAudioYoutubeComponentState();
@@ -15,6 +17,7 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
   late YoutubePlayerController _controller;
   late bool isPlayerReady = false;
   late Future<String> videoTitleFuture = Future.value(''); // Initialize with an empty string
+  bool showDeleteIcon = false;
 
   @override
   void initState() {
@@ -54,7 +57,13 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
     ),
       child: TextButton(
         onPressed: ()=> _controller.play(),
-        child: Row(
+        onLongPress: () async {
+        HapticFeedback.mediumImpact();    
+        setState(() {
+          showDeleteIcon = true;
+        });    
+      },
+      child: Row(
           children: [
         Expanded(
           flex:1,
@@ -72,6 +81,10 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
             },
           ),
         ), 
+        showDeleteIcon ? Expanded(flex:1, child: IconButton(
+              onPressed: () => widget.deleteLink(widget.youtubeLink),
+              icon: const Icon(Icons.delete, color: Colors.white,size: 30)
+            ),) : Container(),
         Expanded(
           flex:0,
           child: YoutubePlayer(

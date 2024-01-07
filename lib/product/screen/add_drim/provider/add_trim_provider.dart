@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../../feature/models/audio_list/audio_list_model.dart';
@@ -43,11 +46,6 @@ class AddTrimProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setYoutubeVideoTitle(String sound){
-    _youtubeLinkTitle = sound;
-    notifyListeners();
-  }
-
   void addAndStoreTask(Audio audio) async {
     if (_audiolistName.contains(audio.trackTitle)) {
       _audiolistName.remove(audio.trackTitle);
@@ -58,20 +56,35 @@ class AddTrimProvider extends ChangeNotifier {
     _isFetch = false;
     notifyListeners();
   }
+
+  void deleteLinkToBox(String audio, BuildContext context) async{
+    print('audioooo');
+    print(audio);
+    if (_youtubeList.contains(audio)) {
+      _youtubeList.remove(audio);
+      // ignore: use_build_context_synchronously
+      //showSnackBar(context, 'Video deleted.', 'Video deleted from list.', ContentType.warning);
+      await box.put('youtubeList', _youtubeList); // adding list of maps to storage
+      notifyListeners();
+
+    }
+  }
+
   void addLinkToBox(String audio, BuildContext context) async {
     try{
     var ytExplode = YoutubeExplode();
     var video = await ytExplode.videos.get(audio);
-    if(video.duration!.inSeconds > 20){
+    if(video.duration!.inSeconds > 100){
       // ignore: use_build_context_synchronously
       showSnackBar(context, 'On Snap!', 'This is a long video.', ContentType.failure);
     }
     else{
     if (_youtubeList.contains(audio)) {
-      //_youtubeList.remove(audio);
+      // ignore: use_build_context_synchronously
       showSnackBar(context, 'Video already added', 'Video sound already added.', ContentType.warning);
     } else {
       _youtubeList.add(audio);
+      // ignore: use_build_context_synchronously
       showSnackBar(context, 'Very well', 'Video sound added.', ContentType.success);
     }
     await box.put('youtubeList', _youtubeList); // adding list of maps to storage
@@ -107,11 +120,13 @@ class AddTrimProvider extends ChangeNotifier {
 
 
   void getYoutubelist() {
+    print('asdaasdads');
     List aa = box.get('youtubeList') ?? []; // initializing list from storage
     for (int i = 0; i < aa.length; i++) {
       _youtubeList.add(aa[i]);
     }
     _isFetchYoutubeList = false;
+    notifyListeners();
   }
 
 
@@ -122,19 +137,6 @@ class AddTrimProvider extends ChangeNotifier {
     } else {
       return false;
     }
-  }
-
-  // looping through your list to see whajmkts inside
-  void printTasks() {
-    for (final task in _audiolist) {
-      print(task.toString());
-    }
-  }
-
-  void clearTasks() {
-    _audiolist.clear();
-    //storageList.clear();
-    box.clear();
   }
 
   void showSnackBar(BuildContext context, String title, String message, ContentType contentType) {
@@ -155,4 +157,23 @@ class AddTrimProvider extends ChangeNotifier {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
+void openYouTubeApp() async {
+  if (Platform.isIOS) {
+    if (await canLaunch('youtube://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw')) {
+      await launch('youtube://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw', forceSafariVC: false);
+    } else {
+      if (await canLaunch('https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw')) {
+        await launch('https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw');
+      } else {
+        throw 'Could not launch https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+      }
+    }
+  } else {
+    const url = 'https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }}
 }
