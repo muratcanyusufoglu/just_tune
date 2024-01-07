@@ -1,5 +1,7 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../../feature/models/audio_list/audio_list_model.dart';
 
@@ -56,17 +58,44 @@ class AddTrimProvider extends ChangeNotifier {
     _isFetch = false;
     notifyListeners();
   }
-
-  void addAndStoreYoutubeMusics(String audio, String title) async {
+  void addLinkToBox(String audio, BuildContext context) async {
+    try{
+    var ytExplode = YoutubeExplode();
+    var video = await ytExplode.videos.get(audio);
+    if(video.duration!.inSeconds > 20){
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, 'On Snap!', 'This is a long video.', ContentType.failure);
+    }
+    else{
     if (_youtubeList.contains(audio)) {
-      _youtubeList.remove(audio);
+      //_youtubeList.remove(audio);
+      showSnackBar(context, 'Video already added', 'Video sound already added.', ContentType.warning);
     } else {
       _youtubeList.add(audio);
+      showSnackBar(context, 'Very well', 'Video sound added.', ContentType.success);
     }
     await box.put('youtubeList', _youtubeList); // adding list of maps to storage
     _isFetchYoutubeList = false;
     notifyListeners();
+    }
+    }
+    catch(error){
+      // ignore: use_build_context_synchronously
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, 'On Snap!', 'This is not a youtube video link', ContentType.warning);
+    }
   }
+
+  void addAndStoreYoutubeMusics(String audio, BuildContext context) async {
+    bool linkIsShort = audio.contains('feature=share') ? true : false;
+    if(linkIsShort){
+    var link = audio.split('?feature=share');
+      addLinkToBox(link[0], context);
+    }
+    else{      
+      addLinkToBox(audio, context);
+    }
+    }
 
   void restoreAudios() {
     List aa = box.get('audios') ?? []; // initializing list from storage
@@ -107,4 +136,23 @@ class AddTrimProvider extends ChangeNotifier {
     //storageList.clear();
     box.clear();
   }
+
+  void showSnackBar(BuildContext context, String title, String message, ContentType contentType) {
+  Navigator.pop(context);
+  final snackBar = SnackBar(
+    elevation: 0,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.transparent,
+    content: AwesomeSnackbarContent(
+      title: title,
+      message: message,
+      contentType: contentType,
+      inMaterialBanner: true,
+    ),
+  );
+
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
 }

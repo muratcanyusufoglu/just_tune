@@ -35,14 +35,9 @@ class AddTrim extends StatelessWidget {
         hintText: 'Youtube Link',
       ),maxLines: 1, onChanged: (value) => context.read<AddTrimProvider>().setYoutubeMelody(value)),
                       ),
-                      TextField(onChanged: (value) => context.read<AddTrimProvider>().setYoutubeVideoTitle(value)),
                       ElevatedButton(
                         child: const Text('Save Link'),
-                        onPressed: () => {context.read<AddTrimProvider>().addAndStoreYoutubeMusics(context.read<AddTrimProvider>().youtubeMelody, context.read<AddTrimProvider>().youtubeLinkTitle), Navigator.pop(context)},
-                      ),
-                      ElevatedButton(
-                        child: const Text('Close BottomSheet'),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => {context.read<AddTrimProvider>().addAndStoreYoutubeMusics(context.read<AddTrimProvider>().youtubeMelody, context)},
                       ),
                     ],
                   ),

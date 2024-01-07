@@ -33,39 +33,52 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
   }
 
   Future<String> _fetchVideoTitle(String videoId) async {
+    bool linkIsShort = videoId.contains('feature=share') ? true : false;
+    if(linkIsShort){
+    var link = videoId.split('?feature=share');
+    var ytExplode = YoutubeExplode();
+    var video = await ytExplode.videos.get(link[0]);
+    return video.title;
+  }
+  else{
     var ytExplode = YoutubeExplode();
     var video = await ytExplode.videos.get(videoId);
     return video.title;
   }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color:Colors.amber[700],
-      ),
+    return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color:Colors.amber[700],
+    ),
+      child: TextButton(
+        onPressed: ()=> _controller.play(),
         child: Row(
           children: [
-        IconButton(
-            onPressed: ()=> _controller.play(),
-            icon:const Icon(Icons.play_circle_filled_outlined, color: Colors.red,size: 30)
+        Expanded(
+          flex:1,
+          child: IconButton(
+              onPressed: ()=> {},
+              icon: Icon(Icons.play_circle_filled_outlined, color:_controller.value.isPlaying ? Colors.white : Colors.red,size: 30)
+            ),
+        ),
+        Expanded(
+          flex:3,
+          child: FutureBuilder<String>(
+            future: videoTitleFuture,
+            builder: (context, snapshot) {
+              return Text(snapshot.data ?? '', style: const TextStyle(color: Colors.black),overflow: TextOverflow.ellipsis,);
+            },
           ),
-        FutureBuilder<String>(
-          future: videoTitleFuture,
-          builder: (context, snapshot) {
-            return Text(snapshot.data ?? '', style: const TextStyle(color: Colors.black),overflow: TextOverflow.fade,);
-          },
         ), 
-        YoutubePlayer(
-          aspectRatio: 1/1,
-          width: 0,
-          controller: _controller,
-          onReady: () {
-          },
-          progressColors: ProgressBarColors(playedColor: Colors.red, backgroundColor: Colors.red,bufferedColor:Colors.red, handleColor: Colors.red),
-          progressIndicatorColor: Colors.red,
-          liveUIColor: Colors.red,
+        Expanded(
+          flex:0,
+          child: YoutubePlayer(
+            aspectRatio: 1/1,
+            width: 0,
+            controller: _controller,
+          ),
         ),
           ],
         ),
