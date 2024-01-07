@@ -12,7 +12,7 @@ class AddTrim extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(),
       body: Column(
         children: [
@@ -32,7 +32,7 @@ class AddTrim extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(decoration: const InputDecoration(
+                        child: TextFormField(decoration: const InputDecoration(                          
         disabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
         ),

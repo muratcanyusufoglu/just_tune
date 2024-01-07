@@ -69,7 +69,7 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
           flex:1,
           child: IconButton(
               onPressed: ()=> {},
-              icon: Icon(Icons.play_circle_filled_outlined, color:_controller.value.isPlaying ? Colors.white : Colors.red,size: 30)
+              icon: Icon(Icons.play_circle_filled_outlined, color:_controller.value.isPlaying ? Colors.white : Colors.red,size: 25)
             ),
         ),
         Expanded(
@@ -85,13 +85,10 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
               onPressed: () => widget.deleteLink(widget.youtubeLink),
               icon: const Icon(Icons.delete, color: Colors.white,size: 30)
             ),) : Container(),
-        Expanded(
-          flex:0,
-          child: YoutubePlayer(
-            aspectRatio: 1/1,
-            width: 0,
-            controller: _controller,
-          ),
+        YoutubePlayer(
+          aspectRatio: 1/1,
+          width: 0,
+          controller: _controller,
         ),
           ],
         ),

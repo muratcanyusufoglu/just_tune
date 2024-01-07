@@ -66,7 +66,7 @@ class AddTrimProvider extends ChangeNotifier {
       //showSnackBar(context, 'Video deleted.', 'Video deleted from list.', ContentType.warning);
       await box.put('youtubeList', _youtubeList); // adding list of maps to storage
       notifyListeners();
-
+      
     }
   }
 
