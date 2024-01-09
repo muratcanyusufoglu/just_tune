@@ -52,16 +52,13 @@ class CustomAudioListComponent extends StatelessWidget {
                   },
                   child: Container(
                     width: 50,
-                    color: Colors.yellow.shade600,
                     padding: const EdgeInsets.all(8),
                     child: context.watch<AddTrimProvider>().isSoundSelected(audio)
-                        ? const Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.black),
+                        ? const Icon(
+                            Icons.check_box_rounded
                           )
-                        : const Text(
-                            'TURN LIGHT OFF',
-                            style: TextStyle(color: Colors.black),
+                        : const Icon(
+                          Icons.check_box_outline_blank
                           ),
                   ),
                 )

@@ -53,10 +53,10 @@ class AddTrimProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-void deleteLinkToBox(String audio, BuildContext context) async {
+void deleteLinkToBox(String youtubeLink, BuildContext context) async {
   List<YoutubeList> list = [];
-  if (_youtubeList.any((youtube) => youtube.title == audio)) {
-    _youtubeList.removeWhere((youtube) => youtube.title == audio);
+  if (_youtubeList.any((youtube) => youtube.youtubeLink == youtubeLink)) {
+    _youtubeList.removeWhere((youtube) => youtube.youtubeLink == youtubeLink);
     list.addAll(_youtubeList);
     _youtubeList.clear();
     _youtubeList.addAll(list);
@@ -124,17 +124,25 @@ Future<String> _fetchVideoTitle(String videoId) async {
   }
 
 void getYoutubelist() {
-  List<Map<String, dynamic>> aa = box.get('youtubeList') ?? []; // initializing list from storage
-  _youtubeList.clear(); // Clear the existing list
+  List<YoutubeList> youtubeList = [];
+  // Retrieve the raw data as List<dynamic> from the box
+  List<dynamic>? rawList = box.get('youtubeList');
 
-  for (int i = 0; i < aa.length; i++) {
-    var youtubeListData = aa[i];
-    _youtubeList.add(YoutubeList.fromJson(youtubeListData));
+  // Ensure that rawList is not null before attempting to convert
+  if (rawList != null) {
+    // Convert the raw data to a list of YoutubeList objects
+    youtubeList = YoutubeList.fromJsonList(rawList);
   }
-
+  _youtubeList.clear(); // Clear the existing list
+  for (int i = 0; i < youtubeList.length; i++) {
+    YoutubeList youtubeListData = youtubeList[i];
+    _youtubeList.add(youtubeListData);
+  }
   _isFetchYoutubeList = false;
   notifyListeners();
 }
+
+
 
 bool isSoundSelected(Audio audio) {
     if (_audiolistName.contains(audio.trackTitle)) {
