@@ -16,19 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late YoutubePlayerController _controller;
 
-  @override
-void initState(){
-    _controller = YoutubePlayerController(
-        initialVideoId: 'OcEi2o8g2L0',
-        flags: YoutubePlayerFlags(
-            mute: false,
-            autoPlay: false,
-        ),
-    );
-    super.initState();
-}
+
   @override
   Widget build(BuildContext context) {
     context.watch<AddTrimProvider>().isFetch ? context.watch<AddTrimProvider>().restoreAudios() : null;
@@ -36,16 +25,31 @@ void initState(){
     return Scaffold(
       body: Column(
         children: [
-      ElevatedButton(onPressed: (){_controller.play();}, child: Container( child: Text('playyyyyyy'))),
+          Flexible(
+            child: context.watch<AddTrimProvider>().youtubeList.isNotEmpty
+                ? GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Set the number of columns
+                    crossAxisSpacing: 20.0, // Set the spacing between columns
+                    mainAxisSpacing: 10.0, // Set the spacing between rows
+                    childAspectRatio: 3,
+                  ),
+                  itemCount: context.watch<AddTrimProvider>().youtubeList.length, // Set the number of items in your list
+                  itemBuilder: (context, index) {
+                  return CustomAudioYoutubeComponent(youtubeList: context.watch<AddTrimProvider>().youtubeList[index]);
+                  },
+                  )
+                : const Text('Please add a sound'),
+          ),
           Expanded(
             child: context.watch<AddTrimProvider>().audioListName.isNotEmpty
-                ? GridView.count(
-                  primary: false,
-                  padding: const EdgeInsets.all(10),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                  children:[ ListView.builder(
+                ? GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1, // Set the number of columns
+                    crossAxisSpacing: 20.0, // Set the spacing between columns
+                    mainAxisSpacing: 10.0, // Set the spacing between rows
+                    childAspectRatio: 3,
+                  ),
                       itemCount: context.watch<AddTrimProvider>().audioListName.length,
                       itemBuilder: (context, index) {
                         Audio selectedAudio = AudioList().audioList[index];
@@ -62,23 +66,6 @@ void initState(){
                           trackName: selectedAudio.trackTitle,
                         );
                       },
-                    ),]
-                )
-                : const Text('Please add a sound'),
-          ),
-          Flexible(
-            child: context.watch<AddTrimProvider>().youtubeList.isNotEmpty
-                ? GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Set the number of columns
-                    crossAxisSpacing: 20.0, // Set the spacing between columns
-                    mainAxisSpacing: 10.0, // Set the spacing between rows
-                    childAspectRatio: 3,
-                  ),
-                  itemCount: context.watch<AddTrimProvider>().youtubeList.length, // Set the number of items in your list
-                  itemBuilder: (context, index) {
-                  return CustomAudioYoutubeComponent(youtubeLink: context.read<AddTrimProvider>().youtubeList[index], deleteLink: (String youtubeLink) => context.read<AddTrimProvider>().deleteLinkToBox(youtubeLink, context),);
-                  },
                   )
                 : const Text('Please add a sound'),
           ),

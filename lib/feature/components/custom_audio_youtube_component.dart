@@ -1,13 +1,13 @@
+import 'package:drum_machine/feature/models/youtube_list/youtube_list_model.dart';
+import 'package:drum_machine/product/screen/add_drim/provider/add_trim_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class CustomAudioYoutubeComponent extends StatefulWidget {
-  const CustomAudioYoutubeComponent({Key? key, required this.youtubeLink, required this.deleteLink}) : super(key: key);
-
-  final String youtubeLink;
-  final void Function(String) deleteLink;
+  const CustomAudioYoutubeComponent({Key? key, required this.youtubeList}) : super(key: key);
+  final YoutubeList youtubeList;
 
   @override
   State<CustomAudioYoutubeComponent> createState() => _CustomAudioYoutubeComponentState();
@@ -23,7 +23,7 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
   void initState() {
     super.initState();
     final String videoId;
-    videoId = YoutubePlayer.convertUrlToId(widget.youtubeLink) ?? '';
+    videoId = YoutubePlayer.convertUrlToId(widget.youtubeList.youtubeLink) ?? '';
     _controller = YoutubePlayerController(
       initialVideoId: videoId,
       flags: const YoutubePlayerFlags(
@@ -31,23 +31,6 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
         autoPlay: false,
       ),
     );
-
-    videoTitleFuture = _fetchVideoTitle(widget.youtubeLink);
-  }
-
-  Future<String> _fetchVideoTitle(String videoId) async {
-    bool linkIsShort = videoId.contains('feature=share') ? true : false;
-    if(linkIsShort){
-    var link = videoId.split('?feature=share');
-    var ytExplode = YoutubeExplode();
-    var video = await ytExplode.videos.get(link[0]);
-    return video.title;
-  }
-  else{
-    var ytExplode = YoutubeExplode();
-    var video = await ytExplode.videos.get(videoId);
-    return video.title;
-  }
   }
 
   @override
@@ -74,15 +57,10 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
         ),
         Expanded(
           flex:3,
-          child: FutureBuilder<String>(
-            future: videoTitleFuture,
-            builder: (context, snapshot) {
-              return Text(snapshot.data ?? '', style: const TextStyle(color: Colors.black),overflow: TextOverflow.ellipsis,);
-            },
-          ),
+          child: Text(widget.youtubeList.title ?? '', style: const TextStyle(color: Colors.black),overflow: TextOverflow.ellipsis,)        
         ), 
         showDeleteIcon ? Expanded(flex:1, child: IconButton(
-              onPressed: () => widget.deleteLink(widget.youtubeLink),
+              onPressed: () => context.read<AddTrimProvider>().deleteLinkToBox(widget.youtubeList.youtubeLink, context),
               icon: const Icon(Icons.delete, color: Colors.white,size: 30)
             ),) : Container(),
         YoutubePlayer(
