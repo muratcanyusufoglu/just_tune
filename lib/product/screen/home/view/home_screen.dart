@@ -36,37 +36,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   itemCount: context.watch<AddTrimProvider>().youtubeList.length, // Set the number of items in your list
                   itemBuilder: (context, index) {
-                  return CustomAudioYoutubeComponent(youtubeList: context.watch<AddTrimProvider>().youtubeList[index]);
+                  return CustomAudioYoutubeComponent(youtubeList: context.watch<AddTrimProvider>().youtubeList[index], index:index);
                   },
                   )
                 : const Text('Please add a sound'),
           ),
           Expanded(
             child: context.watch<AddTrimProvider>().audioListName.isNotEmpty
-                ? GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1, // Set the number of columns
-                    crossAxisSpacing: 20.0, // Set the spacing between columns
-                    mainAxisSpacing: 10.0, // Set the spacing between rows
-                    childAspectRatio: 3,
-                  ),
-                      itemCount: context.watch<AddTrimProvider>().audioListName.length,
-                      itemBuilder: (context, index) {
-                        Audio selectedAudio = AudioList().audioList[index];
-                        for (var i = 0; i < AudioList().audioList.length; i++) {
-                          final Audio audio = AudioList().audioList[i];
-                          if (context.read<AddTrimProvider>().audioListName[index] == audio.trackTitle) {
-                            selectedAudio = AudioList().audioList[i];
-                          }
-                        }
-                        return CustomAudioListComponent(
-                          audio: selectedAudio,
-                          audioName: selectedAudio.trackname,
-                          audioExplanation: selectedAudio.explanation,
-                          trackName: selectedAudio.trackTitle,
-                        );
-                      },
-                  )
+                ? Expanded(
+            child: ListView.builder(
+              itemCount: context.watch<AddTrimProvider>().audioListName.length,
+              itemBuilder: (context, index) {
+                Audio selectedAudio = AudioList().audioList[index];
+                for (var i = 0; i < AudioList().audioList.length; i++) {
+                  final Audio audio = AudioList().audioList[i];
+                  if (context.read<AddTrimProvider>().audioListName[index] == audio.trackTitle) {
+                    selectedAudio = AudioList().audioList[i];
+                  }
+                }
+                return CustomAudioListComponent(
+                  audioName: selectedAudio.trackname,
+                  audioExplanation: selectedAudio.explanation,
+                  trackName: selectedAudio.trackTitle,
+                  audio: selectedAudio,
+                );
+              },
+            ),
+          )
                 : const Text('Please add a sound'),
           ),
         ],

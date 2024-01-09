@@ -1,3 +1,4 @@
+import 'package:drum_machine/feature/functions/color_function.dart';
 import 'package:drum_machine/feature/models/youtube_list/youtube_list_model.dart';
 import 'package:drum_machine/product/screen/add_drim/provider/add_trim_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CustomAudioYoutubeComponent extends StatefulWidget {
-  const CustomAudioYoutubeComponent({Key? key, required this.youtubeList}) : super(key: key);
+  const CustomAudioYoutubeComponent({Key? key, required this.youtubeList, required this.index}) : super(key: key);
   final YoutubeList youtubeList;
+  final int index;
 
   @override
   State<CustomAudioYoutubeComponent> createState() => _CustomAudioYoutubeComponentState();
@@ -36,8 +38,7 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color:Colors.amber[700],
-    ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: SelectedColor().returnColorFromIndex(widget.index+1)),
       child: TextButton(
         onPressed: ()=> _controller.play(),
         onLongPress: () async {

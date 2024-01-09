@@ -30,8 +30,9 @@ class CustomAudioListComponent extends StatelessWidget {
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Row(children: [              
                 const Icon(Icons.music_note),
                 Padding(
                   padding: const EdgeInsets.all(10),
@@ -45,7 +46,7 @@ class CustomAudioListComponent extends StatelessWidget {
                       )
                     ],
                   ),
-                ),
+                ),],),
                 GestureDetector(
                   onTap: () {
                     context.read<AddTrimProvider>().addAndStoreTask(audio);
