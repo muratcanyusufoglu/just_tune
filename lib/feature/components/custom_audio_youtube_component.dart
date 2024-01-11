@@ -1,3 +1,4 @@
+import 'package:drum_machine/feature/constants/icons/app_icons.dart';
 import 'package:drum_machine/feature/functions/color_function.dart';
 import 'package:drum_machine/feature/models/youtube_list/youtube_list_model.dart';
 import 'package:drum_machine/product/screen/add_drim/provider/add_trim_provider.dart';
@@ -49,11 +50,11 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
       },
       child: Row(
           children: [
-        Expanded(
+        Expanded( 
           flex:1,
           child: IconButton(
               onPressed: ()=> {},
-              icon: Icon(Icons.play_circle_filled_outlined, color:_controller.value.isPlaying ? Colors.white : Colors.red,size: 25)
+              icon: AppIcons.youtubeIcon
             ),
         ),
         Expanded(

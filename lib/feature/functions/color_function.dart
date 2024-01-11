@@ -9,9 +9,9 @@ class SelectedColor{
     } else if (mod == 3 || mod == 4) {
         return Colors.indigo[100];
     } else if (mod == 5 || mod == 6) {
-        return Colors.indigo[150];
-    } else if (mod == 7 || mod == 0) {
         return Colors.indigo[200];
+    } else if (mod == 7 || mod == 0) {
+        return Colors.indigo[300];
     } else {
         return Colors.indigo[900]; 
     }

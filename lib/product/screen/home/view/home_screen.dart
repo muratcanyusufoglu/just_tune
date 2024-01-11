@@ -6,7 +6,6 @@ import 'package:drum_machine/product/screen/add_drim/provider/add_trim_provider.
 import 'package:drum_machine/product/screen/add_drim/view/add_trim.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     context.watch<AddTrimProvider>().isFetch ? context.watch<AddTrimProvider>().restoreAudios() : null;
@@ -39,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return CustomAudioYoutubeComponent(youtubeList: context.watch<AddTrimProvider>().youtubeList[index], index:index);
                   },
                   )
-                : const Text('Please add a sound'),
+            : const Text('Please add a sound'),
           ),
           Expanded(
             child: context.watch<AddTrimProvider>().audioListName.isNotEmpty
@@ -70,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: _actionButton(context),
     );
   }
-
   FloatingActionButton _actionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
