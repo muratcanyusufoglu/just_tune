@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
         ),
+        textTheme: TextTheme(bodySmall: TextStyle(fontSize: 15.0,color: Theme.of(context).colorScheme.primary), titleMedium: TextStyle(fontSize: 15.0,color: Theme.of(context).colorScheme.background), titleLarge: TextStyle(fontSize: 20.0,color: Theme.of(context).colorScheme.primary))
       ),
       home: const App(),
     );

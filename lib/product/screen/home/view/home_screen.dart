@@ -15,11 +15,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   @override
   Widget build(BuildContext context) {
     context.watch<AddTrimProvider>().isFetch ? context.watch<AddTrimProvider>().restoreAudios() : null;
     context.watch<AddTrimProvider>().isFetchYoutubeList ? context.watch<AddTrimProvider>().getYoutubelist() : null;
     return Scaffold(
+      appBar: AppBar(title: Text('My Sounds', style: Theme.of(context).textTheme.titleMedium,), backgroundColor: Theme.of(context).colorScheme.background,),
       body: Column(
         children: [
           Flexible(

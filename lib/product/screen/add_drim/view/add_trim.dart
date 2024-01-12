@@ -42,8 +42,8 @@ class _AddTrimState extends State<AddTrim> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Clipboard Content'),
-          content: Text('Do you want to paste this text in your app?'),
+          title: Text('We Observed a Youtube Link', style: Theme.of(context).textTheme.titleLarge),
+          content: Text('Do you want to add this youtube link your sound?', style: Theme.of(context).textTheme.bodySmall),
           actions: [
             TextButton(
               onPressed: () {
@@ -68,7 +68,7 @@ class _AddTrimState extends State<AddTrim> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Add Sounds', style: Theme.of(context).textTheme.titleMedium,), backgroundColor: Theme.of(context).colorScheme.background,),
       body: Column(
         children: [
           ElevatedButton(onPressed: (){
