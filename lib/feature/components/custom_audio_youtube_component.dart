@@ -53,7 +53,7 @@ class _CustomAudioYoutubeComponentState extends State<CustomAudioYoutubeComponen
         Expanded( 
           flex:1,
           child: IconButton(
-              onPressed: ()=> {},
+              onPressed: ()=> _controller.play(),
               icon: AppIcons.youtubeIcon
             ),
         ),

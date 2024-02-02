@@ -9,7 +9,6 @@ void main() async{
 WidgetsFlutterBinding.ensureInitialized();
 final directory = await getApplicationDocumentsDirectory();
 Hive.init(directory.path);
-
   await Hive.openBox('audioBox');
   runApp(MultiProvider(providers: [ChangeNotifierProvider<AddTrimProvider>(create: (_) => AddTrimProvider())], child: const MyApp()));
 }

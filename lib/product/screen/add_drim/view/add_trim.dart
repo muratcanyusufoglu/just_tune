@@ -115,7 +115,7 @@ class _AddTrimState extends State<AddTrim> {
                     children: <Widget>[
                       const Text('Add Youtube Link'),
                       ElevatedButton(
-                        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Open Youtube'),AppIcons.youtubeIcon]),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Open Youtube'), AppIcons.youtubeIcon]),
                         onPressed: () => context.read<AddTrimProvider>().openYouTubeApp(),
                       ),
                       Padding(

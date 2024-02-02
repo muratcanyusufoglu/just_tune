@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:drum_machine/feature/components/snack_bar.dart';
+import 'package:drum_machine/feature/constants/app_strings.dart';
+import 'package:drum_machine/feature/functions/validate_link_class.dart';
 import 'package:drum_machine/feature/models/youtube_list/youtube_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -70,49 +73,26 @@ void addLinkToBox(String audio, BuildContext context) async {
     var ytExplode = YoutubeExplode();
     var video = await ytExplode.videos.get(audio);
     if (video.duration!.inSeconds > 100) {
-      showSnackBar(context, 'On Snap!', 'This is a long video.', ContentType.failure);
+        ShowSnackBar().showSnackBar(context, AppStrings.ohSnap, AppStrings.thisIsLongVideo, ContentType.failure);
     } else {
       if (_youtubeList.any((youtube) => youtube.title == audio)) {
-        showSnackBar(context, 'Video already added', 'Video sound already added.', ContentType.warning);
+        ShowSnackBar().showSnackBar(context, AppStrings.videoAlreadyAdded, AppStrings.videoSoundAlreadyAdded, ContentType.warning);
       } else {
-        var linkIsShort = audio.contains('feature=share');
-        String videoTitle = await _fetchVideoTitle(linkIsShort ? audio.split('?feature=share')[0] : audio);
+        String videoTitle = await LinkValidation().validateLinkTitle(audio);
         _youtubeList.add(YoutubeList(index: UniqueKey().toString(), title: videoTitle, duration: video.duration.toString(), youtubeLink: audio));
-        showSnackBar(context, 'Very well', 'Video sound added.', ContentType.success);
+        ShowSnackBar().showSnackBar(context, AppStrings.veryWell, AppStrings.videoSoundAdded, ContentType.success);
       }
       await box.put('youtubeList', _youtubeList.map((youtube) => youtube.toJson()).toList());
       _isFetchYoutubeList = false;
       notifyListeners();
     }
   } catch (error) {
-    showSnackBar(context, 'On Snap!', 'This is not a youtube video link', ContentType.warning);
+    ShowSnackBar().showSnackBar(context, AppStrings.ohSnap, AppStrings.thisIsNotaYoutubeVideoLink, ContentType.warning);
   }
 }
 
-Future<String> _fetchVideoTitle(String videoId) async {
-    bool linkIsShort = videoId.contains('feature=share') ? true : false;
-    if(linkIsShort){
-    var link = videoId.split('?feature=share');
-    var ytExplode = YoutubeExplode();
-    var video = await ytExplode.videos.get(link[0]);
-    return video.title;
-  }
-  else{
-    var ytExplode = YoutubeExplode();
-    var video = await ytExplode.videos.get(videoId);
-    return video.title;
-  }
-  }
-
   void addAndStoreYoutubeMusics(String audio, BuildContext context) async {
-    bool linkIsShort = audio.contains('feature=share') ? true : false;
-    if(linkIsShort){
-    var link = audio.split('?feature=share');
-      addLinkToBox(link[0], context);
-    }
-    else{      
-      addLinkToBox(audio, context);
-    }
+    addLinkToBox(await LinkValidation().validateLink(audio), context);
   }
 
   void restoreAudios() {
@@ -152,37 +132,22 @@ bool isSoundSelected(Audio audio) {
     }
   }
 
-  void showSnackBar(BuildContext context, String title, String message, ContentType contentType) {
-  Navigator.pop(context);
-  final snackBar = SnackBar(
-    elevation: 0,
-    behavior: SnackBarBehavior.floating,
-    backgroundColor: Colors.transparent,
-    content: AwesomeSnackbarContent(
-      title: title,
-      message: message,
-      contentType: contentType,
-      inMaterialBanner: true,
-    ),
-  );
-
-  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-}
-
 void openYouTubeApp() async {
+  String youtubeChannelUrl = 'https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+  String youtubeAppUrl = 'youtube://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+
   if (Platform.isIOS) {
-    if (await canLaunch('youtube://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw')) {
-      await launch('youtube://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw', forceSafariVC: false);
+    if (await canLaunch(youtubeAppUrl)) {
+      await launch(youtubeAppUrl, forceSafariVC: false);
     } else {
-      if (await canLaunch('https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw')) {
-        await launch('https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw');
+      if (await canLaunch('$youtubeChannelUrl')) {
+        await launch('$youtubeChannelUrl');
       } else {
-        throw 'Could not launch https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+        throw 'Could not launch $youtubeChannelUrl';
       }
     }
   } else {
-    const url = 'https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+    String url = youtubeChannelUrl;
     if (await canLaunch(url)) {
       await launch(url);
     } else {
