@@ -11,5 +11,11 @@ class AppStrings {
   static const String veryWell = 'Very well';
   static const String videoSoundAdded = 'Video sound added.';
   static const String thisIsNotaYoutubeVideoLink = 'This is not a youtube video link';
-
+  static const String addYoutubeLink = 'Add Youtube Link';
+  static const String youtubeLink = 'Youtube Link';
+  static const String saveLink = 'Save Link';
+  static const String openYoutube = 'Open Youtube';
+  static const String mySounds = 'My Sounds';
+  static const String pleaseAddaSound = 'Please add a sound';
+  
 }

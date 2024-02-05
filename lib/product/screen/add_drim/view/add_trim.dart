@@ -1,4 +1,5 @@
 
+import 'package:drum_machine/feature/constants/app_strings.dart';
 import 'package:drum_machine/feature/constants/audio_list.dart';
 import 'package:drum_machine/feature/components/custom_audio_list_component.dart';
 import 'package:drum_machine/feature/constants/icons/app_icons.dart';
@@ -113,9 +114,9 @@ class _AddTrimState extends State<AddTrim> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Text('Add Youtube Link'),
+                      const Text(AppStrings.addYoutubeLink),
                       ElevatedButton(
-                        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Text('Open Youtube'), AppIcons.youtubeIcon]),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Text(AppStrings.openYoutube), AppIcons.youtubeIcon]),
                         onPressed: () => context.read<AddTrimProvider>().openYouTubeApp(),
                       ),
                       Padding(
@@ -126,7 +127,7 @@ class _AddTrimState extends State<AddTrim> {
                         disabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                         ),
-                        hintText: 'Youtube Link',
+                        hintText: AppStrings.youtubeLink,
                         ),
                         maxLines: 1, 
                         onChanged: (value) => setState(() {
@@ -134,7 +135,7 @@ class _AddTrimState extends State<AddTrim> {
                         })),
                       ),
                       ElevatedButton(
-                        child: const Text('Save Link'),
+                        child: const Text(AppStrings.saveLink),
                         onPressed: () => {context.read<AddTrimProvider>().addAndStoreYoutubeMusics(youtubeLinkController.text, context)},
                       ),
                     ],

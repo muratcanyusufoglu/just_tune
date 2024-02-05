@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -19,8 +21,6 @@ class AddTrimProvider extends ChangeNotifier {
   final String _audioIndex = '';
   String get audioIndex => _audioIndex;
 
-  String _youtubeMelody = '';
-  String get youtubeMelody => _youtubeMelody;
 
   bool _isFetch = true;
   bool get isFetch => _isFetch;
@@ -40,12 +40,7 @@ class AddTrimProvider extends ChangeNotifier {
 
   var box = Hive.box('audioBox');
 
-  void setYoutubeMelody(String sound){
-    _youtubeMelody = sound;
-    notifyListeners();
-  }
-
-  void addAndStoreTask(Audio audio) async {
+  void addAndStoreAudio(Audio audio) async {
     if (_audiolistName.contains(audio.trackTitle)) {
       _audiolistName.remove(audio.trackTitle);
     } else {
@@ -68,26 +63,42 @@ void deleteLinkToBox(String youtubeLink, BuildContext context) async {
   }
 }
 
+void showSnackBar(BuildContext context, String title, String description, ContentType type) {
+  ShowSnackBar().showSnackBar(context, title, description, type);
+}
+
+
 void addLinkToBox(String audio, BuildContext context) async {
   try {
     var ytExplode = YoutubeExplode();
     var video = await ytExplode.videos.get(audio);
+
     if (video.duration!.inSeconds > 100) {
-        ShowSnackBar().showSnackBar(context, AppStrings.ohSnap, AppStrings.thisIsLongVideo, ContentType.failure);
-    } else {
-      if (_youtubeList.any((youtube) => youtube.title == audio)) {
-        ShowSnackBar().showSnackBar(context, AppStrings.videoAlreadyAdded, AppStrings.videoSoundAlreadyAdded, ContentType.warning);
-      } else {
-        String videoTitle = await LinkValidation().validateLinkTitle(audio);
-        _youtubeList.add(YoutubeList(index: UniqueKey().toString(), title: videoTitle, duration: video.duration.toString(), youtubeLink: audio));
-        ShowSnackBar().showSnackBar(context, AppStrings.veryWell, AppStrings.videoSoundAdded, ContentType.success);
-      }
-      await box.put('youtubeList', _youtubeList.map((youtube) => youtube.toJson()).toList());
-      _isFetchYoutubeList = false;
-      notifyListeners();
+      showSnackBar(context, AppStrings.ohSnap, AppStrings.thisIsLongVideo, ContentType.failure);
+      return;
     }
+
+    if (_youtubeList.any((youtube) => youtube.title == audio)) {
+      showSnackBar(context, AppStrings.videoAlreadyAdded, AppStrings.videoSoundAlreadyAdded, ContentType.warning);
+      return;
+    }
+
+    String videoTitle = await LinkValidation().validateLinkTitle(audio);
+
+    _youtubeList.add(YoutubeList(
+      index: UniqueKey().toString(),
+      title: videoTitle,
+      duration: video.duration.toString(),
+      youtubeLink: audio,
+    ));
+
+    showSnackBar(context, AppStrings.veryWell, AppStrings.videoSoundAdded, ContentType.success);
+    await box.put('youtubeList', _youtubeList.map((youtube) => youtube.toJson()).toList());
+    _isFetchYoutubeList = false;
+
+    notifyListeners();
   } catch (error) {
-    ShowSnackBar().showSnackBar(context, AppStrings.ohSnap, AppStrings.thisIsNotaYoutubeVideoLink, ContentType.warning);
+    showSnackBar(context, AppStrings.ohSnap, AppStrings.thisIsNotaYoutubeVideoLink, ContentType.warning);
   }
 }
 
@@ -96,10 +107,8 @@ void addLinkToBox(String audio, BuildContext context) async {
   }
 
   void restoreAudios() {
-    List aa = box.get('audios') ?? []; // initializing list from storage
-    for (int i = 0; i < aa.length; i++) {
-      _audiolistName.add(aa[i]);
-    }
+    List listAudios = box.get('audios') ?? []; // initializing list from storage
+    for (var element in listAudios) {_audiolistName.add(element);}
     _isFetch = false;
   }
 
@@ -121,7 +130,6 @@ void getYoutubelist() {
   _isFetchYoutubeList = false;
   notifyListeners();
 }
-
 
 
 bool isSoundSelected(Audio audio) {

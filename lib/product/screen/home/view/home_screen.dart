@@ -1,5 +1,6 @@
 import 'package:drum_machine/feature/components/custom_audio_list_component.dart';
 import 'package:drum_machine/feature/components/custom_audio_youtube_component.dart';
+import 'package:drum_machine/feature/constants/app_strings.dart';
 import 'package:drum_machine/feature/constants/audio_list.dart';
 import 'package:drum_machine/feature/models/audio_list/audio_list_model.dart';
 import 'package:drum_machine/product/screen/add_drim/provider/add_trim_provider.dart';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.watch<AddTrimProvider>().isFetch ? context.watch<AddTrimProvider>().restoreAudios() : null;
     context.watch<AddTrimProvider>().isFetchYoutubeList ? context.watch<AddTrimProvider>().getYoutubelist() : null;
     return Scaffold(
-      appBar: AppBar(title: Text('My Sounds', style: Theme.of(context).textTheme.titleMedium,), backgroundColor: Theme.of(context).colorScheme.background,),
+      appBar: AppBar(title: Text(AppStrings.mySounds, style: Theme.of(context).textTheme.titleMedium,), backgroundColor: Theme.of(context).colorScheme.background),
       body: Column(
         children: [
           Flexible(
@@ -38,11 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   return CustomAudioYoutubeComponent(youtubeList: context.watch<AddTrimProvider>().youtubeList[index], index:index);
                   },
                   )
-            : const Text('Please add a sound'),
+            : const Text(AppStrings.pleaseAddaSound),
           ),
           Expanded(
             child: context.watch<AddTrimProvider>().audioListName.isNotEmpty
-                ? Expanded(
+                ? 
+          Expanded(
             child: ListView.builder(
               itemCount: context.watch<AddTrimProvider>().audioListName.length,
               itemBuilder: (context, index) {
@@ -62,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           )
-                : const Text('Please add a sound'),
+                : const Text(AppStrings.pleaseAddaSound),
           ),
         ],
       ),

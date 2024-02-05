@@ -49,7 +49,7 @@ class CustomAudioListComponent extends StatelessWidget {
                 ),],),
                 GestureDetector(
                   onTap: () {
-                    context.read<AddTrimProvider>().addAndStoreTask(audio);
+                    context.read<AddTrimProvider>().addAndStoreAudio(audio);
                   },
                   child: Container(
                     width: 50,
